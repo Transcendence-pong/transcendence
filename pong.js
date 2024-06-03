@@ -124,6 +124,78 @@ document.addEventListener("DOMContentLoaded", function() {
         ball.velocityX = -ball.velocityX;
     }
 
+    // ORIGINAL
+    // function update() {
+    //     if (ball.x - ball.radius < 0) {
+    //         com.score++;
+    //         if (com.score === 11 || user.score === 11) {
+    //             window.location.href = "game_over.html";
+    //         }
+    //         resetBall();
+    //     } else if (ball.x + ball.radius > canvas.width / window.devicePixelRatio) {
+    //         user.score++;
+    //         if (user.score === 11 || com.score === 11) {
+    //             window.location.href = "game_over.html";
+    //         }
+    //         resetBall();
+    //     }
+
+    //     ball.x += ball.velocityX;
+    //     ball.y += ball.velocityY;
+
+    //     let comLevel = 0.2; // Increased AI paddle speed
+    //     com.y += (ball.y - (com.y + com.height / 2)) * comLevel;
+
+    //     if (ball.y + ball.radius > canvas.height / window.devicePixelRatio || ball.y - ball.radius < 0) {
+    //         ball.velocityY = -ball.velocityY;
+    //     }
+
+    //     let player = (ball.x < canvas.width / 2 / window.devicePixelRatio) ? user : com;
+    //     if (collision(ball, player)) {
+    //         let collidePoint = ball.y - (player.y + player.height / 2);
+    //         collidePoint = collidePoint / (player.height / 2);
+
+    //         let angleRad = collidePoint * Math.PI / 4;
+    //         let direction = (ball.x < canvas.width / 2 / window.devicePixelRatio) ? 1 : -1;
+
+    //         ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+    //         ball.velocityY = ball.speed * Math.sin(angleRad);
+
+    //         ball.speed += 0.2; // Increased ball speed increment
+    //     }
+    // }
+
+    //PRUEBA 1
+    let comLevel = 0.7; // Nivel de habilidad del AI
+    let lastUpdate = Date.now();
+    let updateInterval = 16; // Intervalo en milisegundos entre cada actualización
+
+    function updateComPaddle() {
+        let now = Date.now();
+        if (now - lastUpdate > updateInterval) {
+            lastUpdate = now;
+
+            // Movimiento del paddle de la computadora con un pequeño retardo
+            let targetY = ball.y - (com.y + com.height / 2);
+            
+            // Simulación de pulsaciones de teclas con cierto margen de error
+            if (Math.abs(targetY) > 10) { // Solo mover si la distancia es mayor a un umbral
+                if (targetY > 0) {
+                    com.y += comLevel * Math.min(10, Math.abs(targetY)); // Ajusta según la velocidad deseada
+                } else {
+                    com.y -= comLevel * Math.min(10, Math.abs(targetY)); // Ajusta según la velocidad deseada
+                }
+            }
+            
+            // Asegurarse de que el paddle no se salga de los límites del juego
+            if (com.y < 0) {
+                com.y = 0;
+            } else if (com.y + com.height > canvas.height / window.devicePixelRatio) {
+                com.y = (canvas.height / window.devicePixelRatio) - com.height;
+            }
+        }
+    }
+
     function update() {
         if (ball.x - ball.radius < 0) {
             com.score++;
@@ -142,8 +214,8 @@ document.addEventListener("DOMContentLoaded", function() {
         ball.x += ball.velocityX;
         ball.y += ball.velocityY;
 
-        let comLevel = 0.2; // Increased AI paddle speed
-        com.y += (ball.y - (com.y + com.height / 2)) * comLevel;
+        // Mueve el paddle de la computadora de manera más humana
+        updateComPaddle();
 
         if (ball.y + ball.radius > canvas.height / window.devicePixelRatio || ball.y - ball.radius < 0) {
             ball.velocityY = -ball.velocityY;
@@ -160,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ball.velocityX = direction * ball.speed * Math.cos(angleRad);
             ball.velocityY = ball.speed * Math.sin(angleRad);
 
-            ball.speed += 0.2; // Increased ball speed increment
+            ball.speed += 0.5; // Increased ball speed increment
         }
     }
 
