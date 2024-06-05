@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function() {
         x: canvas.width / 2 / window.devicePixelRatio,
         y: canvas.height / 2 / window.devicePixelRatio,
         radius: 5 * scaleFactor,
-        speed: 7, // Increased initial speed
-        velocityX: 7, // Increased initial velocityX
-        velocityY: 7, // Increased initial velocityY
+        speed: 7,
+        velocityX: 7,
+        velocityY: 7,
         color: "WHITE"
     };
 
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetBall() {
         ball.x = canvas.width / 2 / window.devicePixelRatio;
         ball.y = canvas.height / 2 / window.devicePixelRatio;
-        ball.speed = 7; // Reset to initial speed
+        ball.speed = 7;
         ball.velocityX = -ball.velocityX;
     }
 
@@ -166,28 +166,27 @@ document.addEventListener("DOMContentLoaded", function() {
     // }
 
     //PRUEBA 1
-    let comLevel = 0.7; // Nivel de habilidad del AI
+    let comLevel = 0.7;
     let lastUpdate = Date.now();
-    let updateInterval = 16; // Intervalo en milisegundos entre cada actualización
+    let updateInterval = 16;
 
     function updateComPaddle() {
         let now = Date.now();
         if (now - lastUpdate > updateInterval) {
             lastUpdate = now;
 
-            // Movimiento del paddle de la computadora con un pequeño retardo
+            // retardo
             let targetY = ball.y - (com.y + com.height / 2);
             
-            // Simulación de pulsaciones de teclas con cierto margen de error
-            if (Math.abs(targetY) > 10) { // Solo mover si la distancia es mayor a un umbral
+            if (Math.abs(targetY) > 10) {
                 if (targetY > 0) {
-                    com.y += comLevel * Math.min(10, Math.abs(targetY)); // Ajusta según la velocidad deseada
+                    com.y += comLevel * Math.min(10, Math.abs(targetY));
                 } else {
-                    com.y -= comLevel * Math.min(10, Math.abs(targetY)); // Ajusta según la velocidad deseada
+                    com.y -= comLevel * Math.min(10, Math.abs(targetY));
                 }
             }
             
-            // Asegurarse de que el paddle no se salga de los límites del juego
+            // para no salir de los limites
             if (com.y < 0) {
                 com.y = 0;
             } else if (com.y + com.height > canvas.height / window.devicePixelRatio) {
@@ -214,7 +213,6 @@ document.addEventListener("DOMContentLoaded", function() {
         ball.x += ball.velocityX;
         ball.y += ball.velocityY;
 
-        // Mueve el paddle de la computadora de manera más humana
         updateComPaddle();
 
         if (ball.y + ball.radius > canvas.height / window.devicePixelRatio || ball.y - ball.radius < 0) {
@@ -232,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ball.velocityX = direction * ball.speed * Math.cos(angleRad);
             ball.velocityY = ball.speed * Math.sin(angleRad);
 
-            ball.speed += 0.5; // Increased ball speed increment
+            ball.speed += 0.5;
         }
     }
 
