@@ -120,8 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetBall() {
         ball.x = canvas.width / 2 / window.devicePixelRatio;
         ball.y = canvas.height / 2 / window.devicePixelRatio;
-        ball.speed = 7;
-        ball.velocityX = -ball.velocityX;
+        ball.speed = ball.velocityX = ball.velocityY = 7;
     }
 
     // ORIGINAL
@@ -175,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (now - lastUpdate > updateInterval) {
             lastUpdate = now;
 
-            // retardo
+            // delay
             let targetY = ball.y - (com.y + com.height / 2);
             
             if (Math.abs(targetY) > 10) {
@@ -186,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
             
-            // para no salir de los limites
+            // limits
             if (com.y < 0) {
                 com.y = 0;
             } else if (com.y + com.height > canvas.height / window.devicePixelRatio) {
