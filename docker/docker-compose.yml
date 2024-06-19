@@ -3,16 +3,20 @@ name: ft_transcendece
 services:
   database:
     container_name: tr-database
-    image: postgres:tr-custom
-    build:
-      context: ./database
-      dockerfile: database.Dockerfile
+    image: postgres:alpine
     volumes:
       - db:/var/lib/postgresql/data
     networks:
       - tr-network
     expose:
       - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "$DB_NAME"]
+      interval: 1s
+      timeout: 8s
+      start_period: 4s
+      start_interval: 2s
+      retries: 4
     environment:
       - POSTGRES_DB=${DB_NAME?err}
       - POSTGRES_USER=${DB_USER?err}
