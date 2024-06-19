@@ -3,13 +3,16 @@ name: ft_transcendece
 services:
   database:
     container_name: tr-database
-    image: postgres:alpine
+    image: postgres:tr-custom
+    build:
+      context: ./database
+      dockerfile: database.Dockerfile
     volumes:
       - db:/var/lib/postgresql/data
     networks:
       - tr-network
-    ports:
-      - 5432:5432
+    expose:
+      - 5432
     environment:
       - POSTGRES_DB=${DB_NAME?err}
       - POSTGRES_USER=${DB_USER?err}
@@ -19,8 +22,10 @@ services:
 
   backend:
     container_name: tr-backend
-    image: python:3-alpine-custom
-    build: ./backend
+    image: django:tr-custom
+    build:
+      context: ./backend
+      dockerfile: backend.Dockerfile
     volumes:
       - ./..:/ft_transcendence:rw
     working_dir: /ft_transcendence
@@ -28,7 +33,8 @@ services:
     networks:
       - tr-network
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
       - DATABASE_NAME=${DB_NAME?err}
       - DATABASE_USER=${DB_USER?err}
